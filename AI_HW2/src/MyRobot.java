@@ -5,10 +5,15 @@ import world.Robot;
 import world.World;
 
 import java.awt.*;
+import java.awt.List;
 import java.util.*;
 
 public class MyRobot extends Robot {
-    boolean isUncertain;
+	private World myWorld;
+	private Point start;
+	private Point goal;
+    private boolean isUncertain;
+    private int [][] displacement= new int[9][2];
 	
     @Override
     public void travelToDestination() {
@@ -25,13 +30,23 @@ public class MyRobot extends Robot {
         isUncertain = world.getUncertain();
         super.addToWorld(world);
     }
-
+    
+    public ArrayList<Point> adjacency(Point point){
+    	ArrayList<Point> a = new ArrayList<Point>();
+    	return a;
+    }
+ 
     public static void main(String[] args) {
         try {
+        	// Uncertainty
 			World myWorld = new World("TestCases/myInputFile1.txt", true);
 			
             MyRobot robot = new MyRobot();
             robot.addToWorld(myWorld);
+            robot.start = robot.myWorld.getStartPos();
+            robot.goal = robot.myWorld.getEndPos();
+
+            
 			//myWorld.createGUI(400, 400, 200); // uncomment this and create a GUI; the last parameter is delay in msecs
 			
 
@@ -42,4 +57,6 @@ public class MyRobot extends Robot {
             e.printStackTrace();
         }
     }
+    
+    
 }

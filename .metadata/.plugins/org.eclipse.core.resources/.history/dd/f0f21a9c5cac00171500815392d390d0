@@ -1,0 +1,58 @@
+// Feel free to use this java file as a template and extend it to write your solver.
+// ---------------------------------------------------------------------------------
+
+import world.Robot;
+import world.World;
+
+import java.awt.*;
+import java.awt.List;
+import java.util.*;
+
+public class MyRobot extends Robot {
+	private World myWorld;
+	private Point start;
+	private Point goal;
+    private boolean isUncertain;
+	
+    @Override
+    public void travelToDestination() {
+        if (isUncertain) {
+			// call function to deal with uncertainty
+        }
+        else {
+			// call function to deal with certainty
+        }
+    }
+
+    @Override
+    public void addToWorld(World world) {
+        isUncertain = world.getUncertain();
+        super.addToWorld(world);
+    }
+
+    public static void main(String[] args) {
+        try {
+        	// Uncertainty
+			World myWorld = new World("TestCases/myInputFile1.txt", true);
+			
+            MyRobot robot = new MyRobot();
+            robot.addToWorld(myWorld);
+            robot.start = robot.myWorld.getStartPos();
+            robot.goal = robot.myWorld.getEndPos();
+
+            
+			//myWorld.createGUI(400, 400, 200); // uncomment this and create a GUI; the last parameter is delay in msecs
+			
+
+			robot.travelToDestination();
+        }
+
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public List<Point> adjacency(Point point){
+    	
+    }
+}

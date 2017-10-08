@@ -1,0 +1,13 @@
+import java.awt.*;
+import java.util.List;
+import java.util.PriorityQueue;
+
+public class Node {
+	private double weight;
+	private Node parent;
+	private Point self;
+	
+	public Node() {
+		
+	}
+}
