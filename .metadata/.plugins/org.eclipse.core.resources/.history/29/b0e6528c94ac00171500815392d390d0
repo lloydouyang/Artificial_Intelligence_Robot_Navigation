@@ -1,6 +1,6 @@
 // Feel free to use this java file as a template and extend it to write your solver.
 // ---------------------------------------------------------------------------------
-// Collaborator De Ouyang (do5xb)
+
 import world.Robot;
 import world.World;
 

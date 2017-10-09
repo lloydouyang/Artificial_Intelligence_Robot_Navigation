@@ -1,6 +1,6 @@
 // Feel free to use this java file as a template and extend it to write your solver.
 // ---------------------------------------------------------------------------------
-// Collaborator De Ouyang (do5xb)
+
 import world.Robot;
 import world.World;
 
@@ -162,7 +162,7 @@ public class MyRobot extends Robot {
     public static void main(String[] args) {
         try {
         	// Uncertainty
-			myWorld = new World("TestCases/myInputFile6.txt", true);
+			myWorld = new World("TestCases/myInputFile4.txt", true);
 			
             MyRobot robot = new MyRobot();
             robot.addToWorld(myWorld);
