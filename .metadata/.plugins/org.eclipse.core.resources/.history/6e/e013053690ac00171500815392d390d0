@@ -82,17 +82,13 @@ public class MyRobot extends Robot {
     		for (int i = 0; i < 8; i++) {
     			int new_x = current.getSelf().x+displacement[i][0];
     			int new_y = current.getSelf().y+displacement[i][1];
-    			if (myWorld.getEndPos().x == new_x && myWorld.getEndPos().y == new_y) {
-    				Point p= new Point(new_x,new_y);
-					Node next= new Node(p,current, current.getSteps()+distance(p),current.getSteps()+1);
-					return next;
-    			}
     			if (((0<=new_x)&&(new_x<myWorld.numRows()))&&((0<=new_y)&&(new_y<myWorld.numCols()))) {
     				Point p= new Point(new_x,new_y);
     				if (!pingMap(p).equals("X")) {
     					Node next= new Node(p,current, current.getSteps()+distance(p),current.getSteps()+1);
     					if ((!next.inopen(open))&&(!next.invisited(visited))) {
     						open.add(next);
+    						if (pingMap(p).equals("F")) return next;
     					}
     				}
     			}
@@ -118,7 +114,10 @@ public class MyRobot extends Robot {
     			if (myWorld.getEndPos().x == new_x && myWorld.getEndPos().y == new_y) {
     				Point p= new Point(new_x,new_y);
 					Node next= new Node(p,current, current.getSteps()+distance(p),current.getSteps()+1);
-					return next;
+					if ((!next.inopen(open))&&(!next.invisited(visited))) {
+						open.add(next);
+						return next;
+					}
     			}
     			if (((0<=new_x)&&(new_x<myWorld.numRows()))&&((0<=new_y)&&(new_y<myWorld.numCols()))) {
     				Point p= new Point(new_x,new_y);
@@ -143,7 +142,7 @@ public class MyRobot extends Robot {
     					Node next= new Node(p,current, current.getSteps()+distance(p),current.getSteps()+1);
     					if ((!next.inopen(open))&&(!next.invisited(visited))) {
     						open.add(next);
-//    						if (pingMap(p).equals("F")) return next;
+    						if (pingMap(p).equals("F")) return next;
     					}
     				}
     			}
@@ -162,7 +161,7 @@ public class MyRobot extends Robot {
     public static void main(String[] args) {
         try {
         	// Uncertainty
-			myWorld = new World("TestCases/myInputFile4.txt", false);
+			myWorld = new World("TestCases/myInputFile1.txt", true);
 			
             MyRobot robot = new MyRobot();
             robot.addToWorld(myWorld);

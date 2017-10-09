@@ -93,6 +93,7 @@ public class MyRobot extends Robot {
     					Node next= new Node(p,current, current.getSteps()+distance(p),current.getSteps()+1);
     					if ((!next.inopen(open))&&(!next.invisited(visited))) {
     						open.add(next);
+    						if (pingMap(p).equals("F")) return next;
     					}
     				}
     			}
@@ -162,7 +163,7 @@ public class MyRobot extends Robot {
     public static void main(String[] args) {
         try {
         	// Uncertainty
-			myWorld = new World("TestCases/myInputFile4.txt", false);
+			myWorld = new World("TestCases/myInputFile4.txt", true);
 			
             MyRobot robot = new MyRobot();
             robot.addToWorld(myWorld);
