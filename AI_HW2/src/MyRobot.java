@@ -26,24 +26,42 @@ public class MyRobot extends Robot {
 	
     @Override
     public void travelToDestination() {
+    	System.out.println(isUncertain);
         if (isUncertain) {
 			// call function to deal with uncertainty
-        }
-        else {
-			// call function to deal with certainty
         	ArrayList<Node> l=new ArrayList<Node>();
-        	Node last = astar();
-        	if (last.equals(null)) {
+        	Node last = uncertain();
+        	if (last==null) {
         		System.out.println("The goal cannot be reached!");
         	}
         	else {
         		l.add(last);
-        		while (last.getParent()!=null) {
+        		while (!last.getParent().getSelf().equals(start)) {
         			last = last.getParent();
         			l.add(last);
         		}
         		for (int i=l.size()-1;i>=0;i--) {
         			move(l.get(i).getSelf());
+        			System.out.println(l.get(i).getSelf().getX()+" "+l.get(i).getSelf().getY());
+        		}
+        	}
+        }
+        else {
+			// call function to deal with certainty
+        	ArrayList<Node> l=new ArrayList<Node>();
+        	Node last = astar();
+        	if (last==null) {
+        		System.out.println("The goal cannot be reached!");
+        	}
+        	else {
+        		l.add(last);
+        		while (!last.getParent().getSelf().equals(start)) {
+        			last = last.getParent();
+        			l.add(last);
+        		}
+        		for (int i=l.size()-1;i>=0;i--) {
+        			move(l.get(i).getSelf());
+        			System.out.println(l.get(i).getSelf().getX()+" "+l.get(i).getSelf().getY());
         		}
         	}
         }
@@ -55,15 +73,11 @@ public class MyRobot extends Robot {
         super.addToWorld(world);
     }
     
-    public ArrayList<Node> adjacency(Node point){
-    	ArrayList<Node> a = new ArrayList<Node>();
-    	return a;
-    }
-    
+
     public Node astar() {
         PriorityQueue<Node> open = new PriorityQueue<Node>(100, new NodeComparator());
     	ArrayList<Node> visited = new ArrayList<Node>();
-    	Node current = new Node(start,null, distance(start) ,0);    	
+    	Node current = new Node(start,null, distance(start) ,0);   
     	open.add(current);
     	while (!open.isEmpty()) {
     		current = open.poll();
@@ -71,10 +85,10 @@ public class MyRobot extends Robot {
     		for (int i = 0; i < 8; i++) {
     			int new_x = current.getSelf().x+displacement[i][0];
     			int new_y = current.getSelf().y+displacement[i][1];
-    			if (((0<=new_x)&&(new_x<=myWorld.numRows()))&&((0<=new_y)&&(new_y<=myWorld.numCols()))) {
+    			if (((0<=new_x)&&(new_x<myWorld.numRows()))&&((0<=new_y)&&(new_y<myWorld.numCols()))) {
     				Point p= new Point(new_x,new_y);
     				if (!pingMap(p).equals("X")) {
-    					Node next= new Node(p,current,distance(p),current.getSteps()+1);
+    					Node next= new Node(p,current, current.getSteps()+distance(p),current.getSteps()+1);
     					if ((!next.inopen(open))&&(!next.invisited(visited))) {
     						open.add(next);
     						if (pingMap(p).equals("F")) return next;
@@ -87,6 +101,51 @@ public class MyRobot extends Robot {
     	return null;
     }
     
+    public Node uncertain() {
+    	char [][] record=new char [myWorld.numRows()][myWorld.numCols()];
+    	
+        PriorityQueue<Node> open = new PriorityQueue<Node>(100, new NodeComparator());
+    	ArrayList<Node> visited = new ArrayList<Node>();
+    	Node current = new Node(start,null, distance(start) ,0);   
+    	open.add(current);
+    	while (!open.isEmpty()) {
+    		current = open.poll();
+    		visited.add(current);
+    		for (int i = 0; i < 8; i++) {
+    			int new_x = current.getSelf().x+displacement[i][0];
+    			int new_y = current.getSelf().y+displacement[i][1];
+    			if (((0<=new_x)&&(new_x<myWorld.numRows()))&&((0<=new_y)&&(new_y<myWorld.numCols()))) {
+    				Point p= new Point(new_x,new_y);
+    				char flag='a';
+    				if (record[p.x][p.y]!='\0') {
+    					flag=record[p.x][p.y];
+    				} else {
+    					int b=0,c=0;
+    					
+    					for (int k=0;k<501;k++) {
+    						if (pingMap(p).equals("X")) {
+    							b++;
+    						} else {
+    							c++;
+    						}
+    					}
+    						flag=b>c ? 'X':'O';
+    						record[p.x][p.y]=flag;
+    						
+    				}
+    				if (!(flag=='X')) {
+    					Node next= new Node(p,current, current.getSteps()+distance(p),current.getSteps()+1);
+    					if ((!next.inopen(open))&&(!next.invisited(visited))) {
+    						open.add(next);
+    						if (pingMap(p).equals("F")) return next;
+    					}
+    				}
+    			}
+    			
+    		}
+    	}
+    	return null;
+    }
     // Modified Manhattan Distance for diagonal movement
     public double distance(Point point) {
     	double x_dist = Math.abs(point.getX() - goal.getX());
@@ -97,7 +156,7 @@ public class MyRobot extends Robot {
     public static void main(String[] args) {
         try {
         	// Uncertainty
-			myWorld = new World("TestCases/myInputFile1.txt", true);
+			myWorld = new World("TestCases/myInputFile5.txt", true);
 			
             MyRobot robot = new MyRobot();
             robot.addToWorld(myWorld);
